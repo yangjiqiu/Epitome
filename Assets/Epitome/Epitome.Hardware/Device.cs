@@ -1,28 +1,16 @@
-﻿/*----------------------------------------------------------------
- * 文件名：Device
- * 文件功能描述：设备
-----------------------------------------------------------------*/
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Epitome.Hardware
 {
     /// <summary>
     /// 设备
     /// </summary>
-    public class Device
+    public static class Device
     {
-        static Device mInstance;
-
-        public static Device GetSingleton() { if (mInstance == null) { mInstance = new Device(); } return mInstance; }
-
-        //++++++++++++++++++++     获取设备信息     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
         /// <summary>
-        /// 获取唯一码
+        /// 获取设备唯一码
         /// </summary>
-        public string GetUniqueCode()
+        public static string GetUniqueCode()
         {
 #if UNITY_ANDROID
             return SystemInfo.deviceUniqueIdentifier;
@@ -34,21 +22,45 @@ namespace Epitome.Hardware
         }
 
         /// <summary>
-        /// 获取全部分辨率
+        /// 显示器支持的所有全屏分辨率，返回分辨率的列表，较低的分辨率排在前面。
         /// </summary>
-        public Resolution[] GetAllResolution() { return Screen.resolutions; }
+        public static Resolution[] AllResolution
+        {
+            get
+            {
+#if UNITY_ANDROID
+                Debug.Log("在Android设备该列表总是为空");
+#endif
+                return Screen.resolutions;
+            }
+        }
+
+        private static Resolution? screenResolution;
 
         /// <summary>
-        /// 获取屏幕分辨率
+        /// 屏幕分辨率(宽，高)
         /// </summary>
-        public int[] GetScreenResolution() { return new int[] { Screen.width, Screen.height }; }
+        public static Resolution ScreenResolution
+        {
+            get
+            {
+                if (screenResolution == null)
+                {
+                    Resolution res = new Resolution();
+                    res.width = Screen.width;
+                    res.height = Screen.height;
+                    screenResolution = res;
+                }
+                return screenResolution.Value;
+            }
+        }
 
         /// <summary>
         /// 获取最大屏幕分辨率
         /// </summary>
-        public int[] GetMaxScreenResolution()
+        public static int[] MaxScreenResolution()
         {
-            Resolution[] tempRes = GetAllResolution();
+            Resolution[] tempRes = AllResolution;
             //显示器支持的所有分辨率  
             int tempCount = tempRes.Length;
             //获取屏幕最大分辨率
@@ -63,7 +75,7 @@ namespace Epitome.Hardware
         /// <summary>
         /// 设备振动.
         /// </summary>
-        public void DeviceVibration()
+        public static void DeviceVibration()
         {
 #if UNITY_ANDROID || UNITY_IPHONE
             Handheld.Vibrate();
@@ -77,12 +89,12 @@ namespace Epitome.Hardware
         /// <summary>
         /// 设置分辨率(参数 0:宽度 1:高度 ).
         /// </summary>
-        public void SetResolution(int[] varResolution,bool varFullScreen = false)
+        public static void SetResolution(Resolution resolution,bool varFullScreen = false)
         {
 #if UNITY_ANDROID || UNITY_IPHONE
            
 #elif UNITY_STANDALONE_WIN
-            Screen.SetResolution(varResolution[0], varResolution[1], varFullScreen);
+            Screen.SetResolution(resolution.width, resolution.height, varFullScreen);
 #endif
         }
 
@@ -90,12 +102,12 @@ namespace Epitome.Hardware
         /// <summary>
         /// 设置屏幕全屏.
         /// </summary>
-        public void SetFullScreen()
+        public static void SetFullScreen()
         {
 #if UNITY_ANDROID || UNITY_IPHONE
 
 #elif UNITY_STANDALONE_WIN
-            SetResolution(GetScreenResolution(), true);
+            SetResolution(ScreenResolution, true);
             Screen.fullScreen = true;
 #endif
         }

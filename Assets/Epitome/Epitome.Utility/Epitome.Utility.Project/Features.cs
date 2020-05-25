@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace Epitome.Utility
+namespace Epitome
 {
     /// <summary>
     /// 功能集合
@@ -21,26 +21,6 @@ namespace Epitome.Utility
         public static Features GetSingleton() { if (mInstance == null) { mInstance = new Features(); } return mInstance; }
         
         //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-        /// <summary>
-        /// 物体激死激活.
-        /// </summary>               
-        public void Activation(GameObject varGame, bool varBool) { varGame.SetActive(varBool); }
-
-        /// <summary>
-        /// 物体状态.
-        /// </summary>               
-        public bool ObjectState(GameObject varGame) { return varGame.activeSelf; }
-
-        /// <summary>
-        /// 平面距离
-        /// </summary>
-        public float PlaneDistance(Vector2 varStart, Vector2 varEnd) { return Vector2.Distance(varStart, varEnd); }
-
-        /// <summary>
-        /// 空间距离
-        /// </summary>
-        public float SpaceDistance(Vector3 varStart, Vector3 varEnd) { return Vector3.Distance(varStart, varEnd); }
 
 #if UNITY_EDITOR
         /// <summary>

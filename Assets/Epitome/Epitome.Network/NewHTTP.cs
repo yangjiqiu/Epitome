@@ -48,7 +48,7 @@ namespace Epitome.Network
 		/// </summary>
 		void HTTP_Respond(string varEvent, WWW varWWW)
 		{
-			EventManager.GetSingleton ().BroadcastEvent (varEvent, varWWW as object);
+			EventManager.Instance.BroadcastEvent (varEvent, varWWW as object);
 		}
 
         //++++++++++++++++++++     连接服务器     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

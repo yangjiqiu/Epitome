@@ -111,7 +111,7 @@ namespace Epitome.Network
         /// </summary>
         public void TCP_BeginSend(string varData)
 		{
-            byte[] tempByte= Data.GetSingleton().StringTurnBytes (varData);
+            byte[] tempByte= Data.StringTurnBytes (varData);
 			mSocket.BeginSend (tempByte,0,tempByte.Length, SocketFlags.None,new AsyncCallback (TCP_EndSend),mSocket);
 		}
         /// <summary>
@@ -170,7 +170,7 @@ namespace Epitome.Network
         /// </summary>
         public void UDP_SendTo(string varData)
 		{
-			byte[] tempByte = Data.GetSingleton().StringTurnBytes (varData);
+			byte[] tempByte = Data.StringTurnBytes (varData);
             if (mSocket != null)
                 mSocket.SendTo(tempByte, tempByte.Length, SocketFlags.None, mServerEndPoint);
         }
@@ -208,8 +208,7 @@ namespace Epitome.Network
 
                         if (tempCount != 0)
                         {
-                            //
-                            Debug.Log(Data.GetSingleton().DecodeUTF8(System.Text.Encoding.Default.GetString(tempVar, 0, tempCount)));
+                            Debug.Log(System.Text.Encoding.Default.GetString(tempVar, 0, tempCount).DecodeUTF8());
                             StickyBagData(tempVar);
                         }
                     }
@@ -252,11 +251,11 @@ namespace Epitome.Network
                     //获取包头长度
                     byte[] tempBaotouLength = new byte[1];
                     Array.Copy(varByte, 0, tempBaotouLength, 0, 1);
-                    int tempBaotou = int.Parse(Data.GetSingleton().BytesTurnString(tempBaotouLength));
+                    int tempBaotou = int.Parse(Data.BytesTurnString(tempBaotouLength));
                     //获取消息体长度
                     byte[] tempPacketLength = new byte[tempBaotou];
                     Array.Copy(varByte, 1, tempPacketLength, 0, tempBaotou);
-                    int tempPacket = int.Parse(Data.GetSingleton().BytesTurnString(tempPacketLength));
+                    int tempPacket = int.Parse(Data.BytesTurnString(tempPacketLength));
                     //获取消息体
                     mServerBytes = new byte[tempPacket];
                     if (1 + tempBaotou + tempPacket >= varByte.Length)
@@ -274,7 +273,7 @@ namespace Epitome.Network
                 }
 
                 if (mServerBytes.Length <= mCurveLength) {
-                    string tempStr = Data.GetSingleton().BytesTurnString(mServerBytes);
+                    string tempStr = Data.BytesTurnString(mServerBytes);
                     mServerBytes = null;
                     mCurveLength = 0;
                     SendData(tempStr);
@@ -293,7 +292,7 @@ namespace Epitome.Network
         {
             try
             {
-                EventManager.GetSingleton().BroadcastEvent(mSendDataEevent, varObj);
+                EventManager.Instance.BroadcastEvent(mSendDataEevent, varObj);
             }
             catch (Exception varException)
             {

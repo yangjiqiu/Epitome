@@ -22,24 +22,8 @@ namespace Epitome.Utility
     /// <summary>
     /// 打包
     /// </summary>
-    public class Packaged : MonoBehaviour
+    public class Packaged : Singleton<Packaged>
     {
-        static Packaged mInstance;
-        public static Packaged GetSingleton()
-        {
-            if (mInstance == null)
-            {
-                //尝试寻找该类的实例。此处不能用GameObject.Find，因为MonoBehaviour继承自Component。
-                mInstance = Object.FindObjectOfType(typeof(Packaged)) as Packaged;
-
-                if (mInstance == null)
-                {
-                    GameObject tempGame = new GameObject("Packaged");
-                    mInstance = tempGame.AddComponent<Packaged>();
-                }
-            }
-            return mInstance;
-        }
 
         //++++++++++++++++++++     打包资源     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #if UNITY_EDITOR
@@ -56,20 +40,21 @@ namespace Epitome.Utility
             if (tempPath.Length != 0)
             {
                 // 选择的要保存的对象  
-                Object[] tempSelection = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
-                BuildTarget tempBuildTarget;
+                //Object[] tempSelection = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+                BuildTarget buildTarget;
 
 #if UNITY_ANDROID
-                tempBuildTarget = BuildTarget.Android;
+                buildTarget = BuildTarget.Android;
 #elif UNITY_IPHONE
-                tempBuildTarget = BuildTarget.Android;
+                buildTarget = BuildTarget.Android;
 #elif UNITY_STANDALONE_WIN
-                tempBuildTarget = BuildTarget.StandaloneWindows;
+                buildTarget = BuildTarget.StandaloneWindows;
 #endif
 
                 //打包
-                BuildPipeline.BuildAssetBundle(Selection.activeObject, tempSelection, tempPath, BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets, tempBuildTarget);
-                StartCoroutine(UploadFile(tempPath));
+                //BuildPipeline.BuildAssetBundle(Selection.activeObject, tempSelection, tempPath, BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets, tempBuildTarget);
+                BuildPipeline.BuildAssetBundles("文件名", BuildAssetBundleOptions.None, buildTarget);
+                new Task(UploadFile(tempPath));
                 XmlDocument tempXmlDocument;
                 string tempRoot = GetVersionFile(tempPath, out tempXmlDocument);
                 ModifyEdition(tempPath, tempRoot, tempXmlDocument, GetVersionNumberMD5(tempPath));
@@ -83,7 +68,7 @@ namespace Epitome.Utility
         public string GetVersionFile(string varPath, out XmlDocument verXml)
         {
             string tempRoot = Path.GetDirectoryName(varPath);
-            Project.GetSingleton().CreateDirectory(tempRoot);
+            Project.CreateDirectory(tempRoot);
             verXml = new XmlDocument();
             if (File.Exists(tempRoot + "/Version.xml"))
                 verXml.Load(tempRoot + "/Version.xml");
@@ -145,7 +130,7 @@ namespace Epitome.Utility
             verXml.Save(varRoot + "/Version.xml");
             verXml.Clone();
             Debug.Log(varRoot + "/Version.xml");
-            StartCoroutine(UploadFile(varRoot + "/Version.xml")); 
+            new Task(UploadFile(varRoot + "/Version.xml")); 
         }
 
         /// <summary>
@@ -156,7 +141,7 @@ namespace Epitome.Utility
             WWWForm tempForm = new WWWForm();
             string[] tempSp = varPath.Split('/');
             tempForm.AddField("Directory", "PineappleAR/");
-            tempForm.AddBinaryData("FileUpload", Project.GetSingleton().GetFileByte(varPath), tempSp[tempSp.Length - 1]);
+            tempForm.AddBinaryData("FileUpload", ReadFile.ReadFileStream(varPath), tempSp[tempSp.Length - 1]);
             WWW tempWWW = new WWW("http://39.108.137.135/Upload/ReceiveFiles.php", tempForm);
             yield return tempWWW;
             Debug.Log(tempWWW.text);

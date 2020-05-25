@@ -1,8 +1,4 @@
-﻿/*----------------------------------------------------------------
- * 文件名：HotUpdate
- * 文件功能描述：热更新
-----------------------------------------------------------------*/
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Xml;
@@ -82,8 +78,8 @@ namespace Epitome.Utility
                     tempSR.Dispose();
                     tempVersion.Dispose();
                     tempVersion = null;
-                    Project.GetSingleton().CreateDirectory(GetPath.GetPersistent + "/Resources");
-                    GetUpdateFile(GetPath.GetPersistent + "/Resources", varSelectUpdate);
+                    Project.CreateDirectory(ProjectPath.GetPersistent + "/Resources");
+                    GetUpdateFile(ProjectPath.GetPersistent + "/Resources", varSelectUpdate);
                     break;
                 }
             }
@@ -177,7 +173,7 @@ namespace Epitome.Utility
             {
                 tempXmlD.DocumentElement.AppendChild(tempXmlD.ImportNode(v, true));
             }
-            tempXmlD.Save(GetPath.GetPersistent + "/Resources/Version.xml");
+            tempXmlD.Save(ProjectPath.GetPersistent + "/Resources/Version.xml");
 
             //更新资源
             for (int i = 0; i < mUpdateFile.Count; i++)
@@ -192,19 +188,19 @@ namespace Epitome.Utility
                 while (!tempWWW.isDone)
                 {
                     float tempProgress = tempWWW.progress * (100f / (float)mUpdateFile.Count) + (i * (100f / (float)mUpdateFile.Count));
-                    EventManager.GetSingleton().BroadcastEvent(EventEnum.DownloadProgress, (int)tempProgress);
+                    EventManager.Instance.BroadcastEvent(EventEnum.DownloadProgress, (int)tempProgress);
                     yield return 0.2f;
                 }
 
                 yield return tempWWW;
 
-                if (tempWWW.size == tempSize)
+                if (tempWWW.bytesDownloaded == tempSize)
                 {
-                    StartCoroutine(Project.GetSingleton().SaveDocument(tempWWW.bytes, GetPath.GetPersistent + "/Resources/" + mUpdateFile[i].Attributes["name"].InnerText));
+                    StartCoroutine(Project.SaveFile(tempWWW.bytes, ProjectPath.GetPersistent + "/Resources/" + mUpdateFile[i].Attributes["name"].InnerText));
                 }
             }
 
-            EventManager.GetSingleton().BroadcastEvent(EventEnum.DownloadProgress, "100");
+            EventManager.Instance.BroadcastEvent(EventEnum.DownloadProgress, "100");
         }
     }
 }

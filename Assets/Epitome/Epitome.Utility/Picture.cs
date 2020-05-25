@@ -19,21 +19,29 @@ namespace Epitome.Utility
     /// </summary>
     public class Picture
     {
-        static Picture mInstance;
+        private static Picture _instance;
 
-        public static Picture GetSingleton() { if (mInstance == null) { mInstance = new Picture(); } return mInstance; }
+        public static Picture Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new Picture();
+                return _instance;
+            }
+        }
 
         //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>
         /// 获取当前拍照照片名字
         /// </summary>
-        public string GetPhotosName() { return "IMG_" + Data.GetSingleton().GetCurrentTime(new string[] { "", "", "_", "", "" }); }
+        public string GetPhotosName() { return "IMG_" + Data.GetCurrentTime(new string[] { "", "", "_", "", "" }); }
 
         /// <summary>
         /// 根据图片路径返回图片的字节流
         /// </summary>
-        public byte[] GetImageByte(string varPath) { return Project.GetSingleton().GetFileByte(varPath); }
+        public byte[] GetImageByte(string varPath) { return ReadFile.ReadFileStream(varPath); }
 
         /// <summary>
         /// 字节流转换图片

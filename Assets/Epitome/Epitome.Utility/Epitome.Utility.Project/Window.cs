@@ -1,39 +1,12 @@
-﻿/*----------------------------------------------------------------
- * 文件名：Window
- * 文件功能描述：窗口
-----------------------------------------------------------------*/
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using System;
 using System.Runtime.InteropServices;
 
 namespace Epitome.Utility
 {
-    public class Window : MonoBehaviour
+    public class Window
     {
-        static Window mInstance;
-
-        public static Window GetSingleton()
-        {
-            if (mInstance == null)
-            {
-                //尝试寻找该类的实例。此处不能用GameObject.Find，因为MonoBehaviour继承自Component。
-                mInstance = UnityEngine.Object.FindObjectOfType(typeof(Window)) as Window;
-
-                if (mInstance == null)
-                {
-                    GameObject tempGame = new GameObject("Window");
-                    //防止被销毁
-                    DontDestroyOnLoad(tempGame);
-                    mInstance = tempGame.AddComponent<Window>();
-                }
-            }
-            return mInstance;
-        }
-
-        //++++++++++++++++++++     窗口     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowLong(IntPtr hwnd, int _nIndex, int dwNewLong);
         [DllImport("user32.dll")]
@@ -61,7 +34,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 设置窗口无边框
         /// </summary>
-        public IEnumerator SetNoBorder(int varWidte, int varHeight)
+        public static IEnumerator SetNoBorder(int varWidte, int varHeight)
         {
             bool tempResult = false;
 
@@ -140,34 +113,22 @@ namespace Epitome.Utility
 
 #endif
 
-        /// <summary>
-        /// 窗口最小化
-        /// </summary>
-        public void WindowMinimize()
+        public static void WindowMinimize()
         {
             ShowWindow(GetForegroundWindow(), SW_SHOWMINIMIZED);
         }
 
-        /// <summary>
-        /// 窗口最大化
-        /// </summary>
-        public void WindowMaximize()
+        public static void WindowMaximize()
         {
             ShowWindow(GetForegroundWindow(), SW_SHOWMAXIMIZED);
         }
 
-        /// <summary>
-        /// 窗口还原
-        /// </summary>
-        public void WindowRestore()
+        public static void WindowRestore()
         {
             ShowWindow(GetForegroundWindow(), SW_SHOWRESTORE);
         }
 
-        /// <summary>
-        /// 窗口关闭
-        /// </summary>
-        public void WindowShutDown()
+        public static void WindowShutDown()
         {
             Application.Quit();
         }

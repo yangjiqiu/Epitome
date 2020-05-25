@@ -2,25 +2,17 @@
  * 文件名：Video
  * 文件功能描述：视频
 ----------------------------------------------------------------*/
-using UnityEngine;
-using System.Collections;
+using UnityEngine.Video;
 
 namespace Epitome.Utility
 {
-    //===============命名空间=========================
     using Hardware;
-    //===============命名空间=========================
 
     /// <summary>
     /// 视频
-    /// </summary>HJIUTYTDGFUJ
-    public class Video
+    /// </summary>
+    public class Video : Singleton<Video>
     {
-        static Video mInstance;
-
-        public static Video GetSingleton() { if (mInstance == null) { mInstance = new Video(); } return mInstance; }
-
-        //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #if UNITY_ANDROID || UNITY_IPHONE
         /// <summary>
         /// 播放视频(全屏).
@@ -41,6 +33,15 @@ namespace Epitome.Utility
             varMovieTexture.loop = varBool;
         }
 #endif
+
+#endif
+
+
+#if UNITY_5_6_OR_NEWER
+        public void StopVideo(VideoPlayer videoPlayer) { videoPlayer.Stop(); }
+
+        public void PlayVideo(VideoPlayer videoPlayer) { videoPlayer.renderMode = VideoRenderMode.CameraNearPlane; }
+#else
         /// <summary>
         /// 创建视频.
         /// </summary>
@@ -64,7 +65,6 @@ namespace Epitome.Utility
         /// 停止视频.
         /// </summary>
         public void StopVideo(MovieTexture varMovieTexture) { varMovieTexture.Stop(); }
-
 #endif
     }
 }

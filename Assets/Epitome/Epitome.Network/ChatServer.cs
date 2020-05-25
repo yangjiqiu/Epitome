@@ -34,9 +34,9 @@ namespace Epitome.Network
         public void Shouting(string varID,byte[] varData)
         {
             //玩家ID  聊天信息
-            byte[] tempID = Data.GetSingleton().StringTurnBytes(varID);
-            byte[] tempData = Data.GetSingleton().MergeBytes(tempID, varData);
-            mNewSocket.UDP_SendTo(Data.GetSingleton().AddHeader(tempData));
+            byte[] tempID = Data.StringTurnBytes(varID);
+            byte[] tempData = Data.MergeBytes(tempID, varData);
+            mNewSocket.UDP_SendTo(Data.AddHeader(tempData));
         }
 
         /// <summary>

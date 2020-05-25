@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Singleton</name>
+    </assembly>
+    <members>
+        <member name="T:Epitome.MonoSingleton`1">
+            <summary>
+            MonoBehaviour singleton base class. Thread safety.
+            </summary>
+        </member>
+        <member name="P:Epitome.MonoSingleton`1.Instance">
+            <summary>
+            Get an instance of the Epitome.MonoSingletond class.
+            </summary>
+        </member>
+        <member name="M:Epitome.MonoSingleton`1.DontDestroyOnLoad">
+            <summary>
+            Makes the Epitome.MonoSingleton object not be destroyed automatically when loading a new scene.
+            </summary>
+        </member>
+        <member name="M:Epitome.MonoSingleton`1.OnDestroy">
+            <summary>
+            This function is called when the Epitome.MonoSingleton object is destroyed.
+            </summary>
+        </member>
+        <member name="T:Epitome.ISingleton">
+            <summary>
+            Singleton interface.
+            </summary>
+        </member>
+        <member name="M:Epitome.ISingleton.OnSingletonInit">
+            <summary>
+            Singleton initialize.
+            </summary>
+        </member>
+        <member name="T:Epitome.Singleton`1">
+            <summary>
+            Singleton base class. Based on the reflection. Thread safety.
+            </summary>
+        </member>
+        <member name="M:Epitome.Singleton`1.#ctor">
+            <summary>
+            Initializes a new instance of the Epitome.Singleton class.
+            </summary>
+        </member>
+        <member name="P:Epitome.Singleton`1.Instance">
+            <summary>
+            Get an instance of the Epitome.Singleton class
+            </summary>
+        </member>
+        <member name="M:Epitome.Singleton`1.OnSingletonInit">
+            <summary>
+            Singleton initialize.
+            </summary>
+        </member>
+        <member name="T:Epitome.SingletonCreator">
+            <summary>
+            Singleton Creator.
+            </summary>
+        </member>
+        <member name="M:Epitome.SingletonCreator.CreateSingleton``1">
+            <summary>
+            Build a Singleton.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Epitome.SingletonCreator.CreateMonoSingleton``1">
+            <summary>
+            Build a MonoSingleton.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:Epitome.SingletonException">
+            <summary>
+            Represents an error that occurred during the execution of the singleton.
+            </summary>
+        </member>
+        <member name="M:Epitome.SingletonException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the Epitome.SingletonException class with a specified error message.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+    </members>
+</doc>

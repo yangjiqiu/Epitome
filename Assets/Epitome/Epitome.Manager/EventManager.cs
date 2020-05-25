@@ -2,8 +2,6 @@
  * 文件名：EventManager
  * 文件功能描述：事件管理器
 ----------------------------------------------------------------*/
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Epitome.Manager
@@ -16,12 +14,8 @@ namespace Epitome.Manager
     /// <summary>
     /// 事件管理器.
     /// </summary>
-    public class EventManager
+    public class EventManager : Singleton<EventManager>
     {
-        static EventManager mInstance;
-
-        public static EventManager GetSingleton() { if (mInstance == null) { mInstance = new EventManager(); } return mInstance; }
-
         //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>

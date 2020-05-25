@@ -14,18 +14,14 @@ using LitJson;
 
 namespace Epitome.Utility
 {
-    public class Data
+    public static class Data
     {
-        static Data mInstance;
-
-        public static Data GetSingleton() { if (mInstance == null) { mInstance = new Data(); } return mInstance; }
-
         //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>
         /// 添加包头.
         /// </summary>
-        public byte[] AddHeader(byte[] varByte)
+        public static byte[] AddHeader(byte[] varByte)
         {
             byte[] tempCount = StringTurnBytes(varByte.Length.ToString());
             byte[] tempByte = StringTurnBytes(tempCount.Length.ToString());
@@ -37,19 +33,19 @@ namespace Epitome.Utility
         /// <summary>
         /// 装箱.
         /// </summary>
-        public object Packing<Type>(Type varType) { return (object)varType; }
+        public static object Packing<Type>(Type varType) { return (object)varType; }
 
         /// <summary>
 		/// 拆箱.
 		/// </summary>
-		public Type Unboxing<Type>(object varObj) { return (Type)varObj; }
+		public static Type Unboxing<Type>(object varObj) { return (Type)varObj; }
 
         //++++++++++++++++++++     合并数据     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>
         /// 合并字节数组.
         /// </summary>
-        public byte[] MergeBytes(byte[] varByte1,byte[] varByte2)
+        public static byte[] MergeBytes(byte[] varByte1,byte[] varByte2)
         {
             byte[] tempByte = new byte[varByte1.Length+ varByte2.Length];
             Array.Copy(varByte1, 0, tempByte, 0, varByte1.Length);
@@ -57,60 +53,35 @@ namespace Epitome.Utility
             return tempByte;
         }
 
+        /// <summary>
+        /// 合并数组.
+        /// </summary>
+        public static T[] MergeArray<T>(T[] array1, T[] array2)
+        {
+            T[] result = new T[array1.Length + array2.Length];
+            array1.CopyTo(result, 0);
+            array2.CopyTo(result, array1.Length);
+            return result;
+        }
+
         //++++++++++++++++++++     编解码     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-        // 编码.
-        string Encode(string varStr, Encoding varEncoding) { return HttpUtility.UrlEncode(varStr, varEncoding); }
-
-        // 解码.
-        string Decode(string varStr, Encoding varEncoding) { return HttpUtility.UrlDecode(varStr, varEncoding); }
-
-        /// <summary>
-        /// 编码UTF8.
-        /// </summary>
-        public string EncodeUTF8(string varStr) { return Encode(varStr, Encoding.UTF8); }
-
-        /// <summary>
-        /// 解码UTF8.
-        /// </summary>
-        public string DecodeUTF8(string varStr) { return Decode(varStr, Encoding.UTF8); }
 
         //++++++++++++++++++++     类型转换     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>
         /// 字符串转字节(UTF8).
         /// </summary>
-        public byte[] StringTurnBytes(string varStr) { return Encoding.UTF8.GetBytes(varStr); }
+        public static byte[] StringTurnBytes(string varStr) { return Encoding.UTF8.GetBytes(varStr); }
 
         /// <summary>
         /// 字节转字符串.
         /// </summary>
-        public string BytesTurnString(byte[] varBytes) { return Encoding.Default.GetString(varBytes); }
-
-        /// <summary>
-        /// 数组转集合.
-        /// </summary>
-        public List<T> ArrayTurnList<T>(T[] varArray)
-        {
-            List<T> tempList = new List<T>();
-            foreach (T v in varArray) { tempList.Add(v); }
-            return tempList;
-        }
-
-        /// <summary>
-        /// 数组转集合.
-        /// </summary>
-        public T[] ListTurnArray<T>(List<T> varList)
-        {
-            T[] tempArray = new T[varList.Count];
-            for (int i = 0; i < tempArray.Length; i++) { tempArray[i] = varList[i]; }
-            return tempArray;
-        }
+        public static string BytesTurnString(byte[] varBytes) { return Encoding.Default.GetString(varBytes); }
 
         /// <summary>
         /// byte[2]转float[1].
         /// </summary>
-        public float[] BytesTurnFloat(byte[] varBytes)
+        public static float[] BytesTurnFloat(byte[] varBytes)
         {
             float[] tempFloat = new float[varBytes.Length / 2];
             for (int i = 0; i < tempFloat.Length; i++)
@@ -127,7 +98,7 @@ namespace Epitome.Utility
         /// <summary>
         /// float[1]转byte[2].
         /// </summary>
-        public byte[] FloatTurnBytes(float[] varFloat)
+        public static byte[] FloatTurnBytes(float[] varFloat)
         {
             Int16[] tempInt16 = new Int16[varFloat.Length];
             Byte[] tempBytes = new Byte[varFloat.Length * 2];
@@ -147,7 +118,7 @@ namespace Epitome.Utility
         /// <summary>
         /// Json转字典.
         /// </summary>
-        public Dictionary<string, string> JsonTurnDict(string varStr)
+        public static Dictionary<string, string> JsonTurnDict(string varStr)
         {
             Dictionary<string, string> tempDict = new Dictionary<string, string>();
 
@@ -156,9 +127,9 @@ namespace Epitome.Utility
             foreach (KeyValuePair<string, JsonData> v in tempJsonData.Inst_Object)
             {
                 if (v.Value.IsArray)
-                    tempDict.Add(this.DecodeUTF8(v.Key), this.DecodeUTF8(v.Value.ToJson()));
+                    tempDict.Add(v.Key.DecodeUTF8(), v.Value.ToJson().DecodeUTF8());
                 else
-                    tempDict.Add(this.DecodeUTF8(v.Key), this.DecodeUTF8(v.Value.ToString()));
+                    tempDict.Add(v.Key.DecodeUTF8(), v.Value.ToString().DecodeUTF8());
             }
 
             return tempDict;
@@ -167,7 +138,7 @@ namespace Epitome.Utility
         /// <summary>
         /// Json转list.
         /// </summary>
-        public List<string> JsonTurnList(string varStr)
+        public static List<string> JsonTurnList(string varStr)
         {
             List<string> tempList = new List<string>();
 
@@ -186,7 +157,7 @@ namespace Epitome.Utility
         /// <summary>
         /// Json数据编码.
         /// </summary>
-        public JsonData JsonEncode(JsonData varData)
+        public static JsonData JsonEncode(JsonData varData)
         {
             JsonData tempJsonData = new JsonData();
             if (varData.IsObject)
@@ -194,9 +165,9 @@ namespace Epitome.Utility
                 foreach (KeyValuePair<string, JsonData> v in varData.Inst_Object)
                 {
                     if (v.Value.IsString)
-                        tempJsonData[EncodeUTF8(v.Key)] = EncodeUTF8(v.Value.ToString());
+                        tempJsonData[v.Key.EncodeUTF8()] = v.Value.ToString().EncodeUTF8();
                     else
-                        tempJsonData[EncodeUTF8(v.Key)] = JsonEncode(v.Value);
+                        tempJsonData[v.Key.EncodeUTF8()] = JsonEncode(v.Value);
                 }
                 return tempJsonData;
             }
@@ -205,7 +176,7 @@ namespace Epitome.Utility
                 foreach (JsonData v in varData)
                 {
                     if (v.IsString)
-                        tempJsonData[tempJsonData.Count] = EncodeUTF8(varData.ToString());
+                        tempJsonData[tempJsonData.Count] = varData.ToString().EncodeUTF8();
                     else
                         tempJsonData[tempJsonData.Count] = JsonEncode(v);
                 }
@@ -216,31 +187,14 @@ namespace Epitome.Utility
 
         //++++++++++++++++++++     获取组件     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-        /// <summary>
-        /// 获取组件
-        /// </summary>
-        public T GetInterface<T>(GameObject inObj) where T : class
-        {
-            if (!typeof(T).IsInterface)
-            {
-                return null;
-            }
-            var tmps = inObj.GetComponents<Component>().OfType<T>();
-            if (tmps.Count() == 0)
-            {
-                return null;
-            }
-            return tmps.First();
-        }
-
         //++++++++++++++++++++     获取时间     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         /// <summary>
         /// 获取当前时间
         /// </summary>
-        public string GetCurrentTime(string[] varInsert)
+        public static string GetCurrentTime(string[] varInsert)
         {
-            //Debug.Log(Data.GetSingleton().GetCurrentTime(new string[] { "", "", "_", "", "" }));
+            //Debug.Log(Data.GetCurrentTime(new string[] { "", "", "_", "", "" }));
             return System.DateTime.Now.ToString(string.Format("yyyy{0}MM{1}dd{2}HH{3}mm{4}ss", varInsert));
         }
     }

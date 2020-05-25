@@ -1,9 +1,4 @@
-﻿/*----------------------------------------------------------------
- * 文件名：Project
- * 文件功能描述：项目
-----------------------------------------------------------------*/
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,138 +8,118 @@ using System;
 
 namespace Epitome.Utility
 {
-    //===============命名空间=========================
-    using Hardware;
     using Manager;
-    //===============命名空间=========================
+    using System.Collections.Generic;
 
-    public class Project
+    public static class Project
     {
-        static Project mInstance;
-
-        public static Project GetSingleton() { if (mInstance == null) { mInstance = new Project(); } return mInstance; }
-
-
-        //=================创建资源======================
-
-        /// <summary>
-        /// 创建文件.
-        /// </summary>               
-        public void CreateFile(string varPath)
+        public static void CreateFile(string path)
         {
-            if (!RetrieveFiles(varPath))
-                File.CreateText(varPath);
+            if (!FileExists(path))
+                File.CreateText(path);
         }
-
-        /// <summary>
-        /// 创建目录.
-        /// </summary>               
-        public void CreateDirectory(string varPath)
+            
+        public static void CreateDirectory(string path)
         {
-            if (!Directory.Exists(varPath))
-                Directory.CreateDirectory(varPath);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
         }
-
-        /// <summary>
-        /// 创建目录.
-        /// </summary>               
-        public void CreateMultipleDirectories(string varPath, string[] varName)
+        
+        public static void CreateMultipleDirectories(string path, string[] names)
         {
-            foreach (string v in varName)
+            for (int i = 0; i < names.Length; i++)
             {
-                if (!Directory.Exists(varPath + "/" + v))
-                    Directory.CreateDirectory(varPath + "/" + v);
+                CreateDirectory(string.Format("{0}/{1}", path, names[i]));
             }
         }
 
         //=================检索资源======================
 
-        /// <summary>
-        /// 检索文件.
-        /// </summary>
-        public bool RetrieveFiles(string varPath)
+        public static bool FileExists(string path)
         {
-            return File.Exists(varPath);
+            return File.Exists(path);
         }
 
-        //=================读取资源======================
-
-        /// <summary>
-        /// 读取文件.
-        /// </summary>
-        public ArrayList ReadFile(string varPath, string varName)
+        public static bool DirectoryExists(string path)
         {
-            //使用流的形式读取
-            StreamReader tempSR = null;
-            try
-            {
-                tempSR = File.OpenText(varPath + "//" + varName);
-            }
-            catch (Exception e)
-            {
-                //路径与名称未找到文件则直接返回空
-                return null;
-            }
-            string tempLine;
-            ArrayList tempArrlist = new ArrayList();
-            while ((tempLine = tempSR.ReadLine()) != null)
-            {
-                //一行一行的读取
-                //将每一行的内容存入数组链表容器中
-                tempArrlist.Add(tempLine);
-            }
-            //关闭流
-            tempSR.Close();
-            //销毁流
-            tempSR.Dispose();
-            //将数组链表容器返回
-            return tempArrlist;
+            return Directory.Exists(path);
         }
 
-        /// <summary>
-        /// 根据路径返回文件的字节流
-        /// </summary>
-        public byte[] GetFileByte(string varPath)
+        public static string[] DirectoryAllFileNames(string path)
         {
-            if (Project.GetSingleton().RetrieveFiles(varPath))
+            string[] strs = new string[] { };
+            if (FileExists(path))
             {
-                //创建文件读取流
-                FileStream tempFileStream = new FileStream(varPath, FileMode.Open, FileAccess.Read);
+                DirectoryInfo direInfo = new DirectoryInfo(path);
+                FileInfo[] files = direInfo.GetFiles("*", SearchOption.AllDirectories);
 
-                tempFileStream.Seek(0, SeekOrigin.Begin);
-                //创建文件长度缓冲区
-                byte[] tempBytes = new byte[tempFileStream.Length];
-                //读取文件
-                tempFileStream.Read(tempBytes, 0, (int)tempFileStream.Length);
-                //释放文件读取流
-                tempFileStream.Close();
-                tempFileStream.Dispose();
-                tempFileStream = null;
-
-                return tempBytes;
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".meta")) continue;
+                    strs[strs.Length] = files[i].Name;
+                }
+                return strs;
             }
             return null;
         }
 
-        //=================  保存资源   ======================
-
-        /// <summary>
-        /// 保存文件.
-        /// </summary>
-        public IEnumerator SaveDocument(byte[] varByte,string varPath)
+        public static FileInfo[] DirectoryAllFileInfo(string path, List<string> suffixs)
         {
-            DeleteFiles(varPath);
+            List<FileInfo> fileInfos = new List<FileInfo>();
+            if (DirectoryExists(path))
+            {
+                DirectoryInfo direInfo = new DirectoryInfo(path);
+                FileInfo[] files = direInfo.GetFiles("*", SearchOption.AllDirectories);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".meta")) continue;
+                    string[] fileName = files[i].Name.Split('.');
+                    if (suffixs.Contains(fileName[fileName.Length - 1]))
+                        fileInfos.Add(files[i]);
+                }
+                return fileInfos.ToArray();
+            }
+            return null;
+        }
 
-            FileStream tempFileStream = new FileStream(varPath, FileMode.CreateNew);
+        public static ArrayList ReadFile(string path, string name)
+        {
+            StreamReader SR = null;
+            try
+            {
+                SR = File.OpenText(path + "//" + name);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                return null;
+            }
+            string line;
+            ArrayList arrlist = new ArrayList();
+            while ((line = SR.ReadLine()) != null)
+            {
+                arrlist.Add(line);
+            }
+            //关闭流
+            SR.Close();
+            //销毁流
+            SR.Dispose();
+            //将数组链表容器返回
+            return arrlist;
+        }
 
-            //将文件内容转换成二进制形式
-            BinaryWriter tempBinaryWriter = new BinaryWriter(tempFileStream);
+        public static IEnumerator SaveFile(byte[] byteFile, string path)
+        {
+            DeleteFiles(path);
 
-            //写文件
-            tempBinaryWriter.Write(varByte);
+            FileStream fileStream = new FileStream(path, FileMode.CreateNew);
 
-            tempBinaryWriter.Close();
-            tempFileStream.Close();
+            BinaryWriter binaryWriter = new BinaryWriter(fileStream);
+
+            binaryWriter.Write(byteFile);
+
+            binaryWriter.Close();
+            fileStream.Close();
 
             yield return null;
 
@@ -153,110 +128,66 @@ namespace Epitome.Utility
 #endif
         }
 
-        /// <summary>
-        /// 保存图片.
-        /// </summary>
-        public void SavePicture(Texture2D varTexture2D, string varPath, string varName)
+
+        public static void SaveImage(Texture2D Image, string path, string name)
         {
-            byte[] tempBytes = varTexture2D.EncodeToPNG();
-            Project.GetSingleton().CreateDirectory(Application.dataPath + "/" + varPath);
-            File.WriteAllBytes(GetPath.GetPersistent + "/" + varPath + "/" + varName, tempBytes);
+            byte[] bytes = Image.EncodeToPNG();
+            Project.CreateDirectory(path);
+            File.WriteAllBytes(string.Format("{0}/{1}/{2}", ProjectPath.GetPersistent, path, name), bytes);
         }
 
-        //=================  加载资源   ======================
-
-        /// <summary>
-        /// 加载服务器资源
-        /// </summary>
-        public IEnumerator LoadServerResources(string varURL,string varPath)
+        public static void DeleteFiles(string path)
         {
-            WWW tempWWW = new WWW(varURL);
-
-            while (!tempWWW.isDone)
-            {
-                EventManager.GetSingleton().BroadcastEvent("LoadProgress", (((int)(tempWWW.progress * 100)) % 100) + "%");
-                yield return 0.2f;
-            }
-
-            yield return tempWWW;
-
-            object[] fd = tempWWW.assetBundle.LoadAllAssets();
-
-            foreach (object v in fd)
-                Debug.Log(v.ToString());
-
-            if (tempWWW.error == null)
-            {
-                Project.GetSingleton().SaveDocument(tempWWW.bytes, varPath);
-                EventManager.GetSingleton().BroadcastEvent("LoadProgress", 100 + "%");
-            }
-            else
-                EventManager.GetSingleton().BroadcastEvent("LoadProgress", "加载失败");
-
-            EventManager.GetSingleton().UnRegisterEvent("LoadProgress");
+            FileInfo file = new FileInfo(path);
+            if (file != null)
+                DeleteFiles(file);
         }
 
-
-        //=================  删除资源   ======================
-
-        /// <summary>
-        /// 删除文件.
-        /// </summary>
-        public void DeleteFiles(string varPath) { FileInfo tempFile = new FileInfo(varPath); if (tempFile != null) DeleteFiles(tempFile); }
-
-        /// <summary>
-        /// 删除文件.
-        /// </summary>
-        public void DeleteFiles(FileInfo varFile) { if (varFile != null) varFile.Delete(); }
-
-        /// <summary>
-        /// 删除文件夹.
-        /// </summary>
-        public void DeleteTheFolder(string varPath)
+        public static void DeleteFiles(FileInfo file)
         {
-            DirectoryInfo tempDire = new DirectoryInfo(varPath);
-            if (tempDire != null)
-                DeleteTheFolder(tempDire);
+            if (file != null)
+                file.Delete();
         }
 
-        /// <summary>
-        /// 删除文件夹.
-        /// </summary>
-        public void DeleteTheFolder(DirectoryInfo varDire)
+        public static void DeleteDirectory(string path)
         {
-            if (varDire == null || (!varDire.Exists))
+            DirectoryInfo dire = new DirectoryInfo(path);
+            if (dire != null)
+                DeleteDirectory(dire);
+        }
+
+        public static void DeleteDirectory(DirectoryInfo dire)
+        {
+            if (dire == null || (!dire.Exists))
                 return;
 
-            DirectoryInfo[] tempDires = varDire.GetDirectories();
-            if (tempDires != null)
+            DirectoryInfo[] dires = dire.GetDirectories();
+            if (dires != null)
             {
-                for (int i = 0; i < tempDires.Length; i++)
-                    DeleteTheFolder(tempDires[i]);
-                tempDires = null;
+                for (int i = 0; i < dires.Length; i++)
+                    DeleteDirectory(dires[i]);
+                dires = null;
             }
 
-            FileInfo[] tempFiles = varDire.GetFiles();
-            if (tempFiles != null)
+            FileInfo[] files = dire.GetFiles();
+            if (files != null)
             {
-                for (int i = 0; i < tempFiles.Length; i++)
-                    DeleteFiles(tempFiles[i]);
-                tempFiles = null;
+                for (int i = 0; i < files.Length; i++)
+                    DeleteFiles(files[i]);
+                files = null;
             }
 
-            varDire.Delete();
+            dire.Delete();
         }
 
+        public static void LoadScene(string name)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(name);
+        }
 
-        //=================  跳转场景   ======================
-
-        /// <summary>
-        /// 跳转场景.
-        /// </summary>
-        public void JumpScene(string varName) { UnityEngine.SceneManagement.SceneManager.LoadScene(varName); }
-
-        /// <summary>
-        /// 跳转场景.
-        /// </summary>
-        public void JumpScene(int varSubscript) { UnityEngine.SceneManagement.SceneManager.LoadScene(varSubscript); }
+        public static void LoadScene(int index)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(index);
+        }
     }
 }

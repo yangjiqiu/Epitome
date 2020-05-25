@@ -10,156 +10,104 @@ using System.IO;
 
 namespace Epitome.Utility
 {
-    //===============命名空间=========================
     using Hardware;
-    //===============命名空间=========================
 
-    /// <summary>
-    /// 音频
-    /// </summary>
-    public class Audio
+    public static class Audio
     {
-        static Audio mInstance;
-
-        public static Audio GetSingleton() { if (mInstance == null) { mInstance = new Audio(); } return mInstance; }
-
-        //++++++++++++++++++++     录音     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-        /// <summary>
-        /// 开始录音
-        /// </summary>
-        public void StartRecording(AudioSource varAudioSource, int varDuration = 60, bool varLoop = false, int varFrequency = 4)
+        public static void BeginRecording(AudioSource audioSource, int duration = 60, bool loop = false, int frequency = 4)
         {
-            Mike.GetSingleton().OpenMicrophone(varAudioSource, varDuration, varLoop, varFrequency);
+            Mike.OpenMicrophone(audioSource, duration, loop, frequency);
         }
 
-        /// <summary>
-        /// 停止录音
-        /// </summary>
-        public int StopRecording(int varAudioTime = 60, int varSamplingRate = 44100)
+        public static int EndRecording(int audioTime = 60, int samplingRate = 44100)
         {
-            int tempAudioLength;
-            int tempLastPos = Microphone.GetPosition(null);
+            int audioLength;
+            int lastPos = Microphone.GetPosition(null);
             if (Microphone.IsRecording(null))
-                tempAudioLength = tempLastPos / varSamplingRate + 1;
+                audioLength = lastPos / samplingRate + 1;
             else
-                tempAudioLength = varAudioTime;
+                audioLength = audioTime;
 
-            
-            return tempAudioLength;
+            return audioLength;
         }
 
-        //++++++++++++++++++++     分界线     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        public static void PlayAudio(AudioClip audio) { AudioSource.PlayClipAtPoint(audio, Vector3.zero); }
+        public static void PlayAudio(AudioClip audio, Vector3 pos) { AudioSource.PlayClipAtPoint(audio, pos); }
+        public static void PlayAudio(AudioSource audioSource) { audioSource.Play(); }
+        public static void PlayAudio(AudioSource audioSource, float time) { audioSource.PlayScheduled(time); }
 
-        /// <summary>
-        /// 播放音频
-        /// </summary>
-        public void PlayAudio(AudioClip varAudio) { AudioSource.PlayClipAtPoint(varAudio, Vector3.zero); }
+        public static void PauseAudio(AudioSource audioSource) { audioSource.Pause(); }
 
-        /// <summary>
-        /// 播放音频
-        /// </summary>
-        public void PlayAudio(AudioClip varAudio,Vector3 varV3) { AudioSource.PlayClipAtPoint(varAudio, varV3); }
-
-        /// <summary>
-        /// 播放音频
-        /// </summary>
-        public void PlayAudio(AudioSource varAudioSource) { varAudioSource.Play(); }
-
-        /// <summary>
-        /// 播放音频
-        /// </summary>
-        public void PlayAudio(AudioSource varAudioSource, float varTime) { varAudioSource.PlayScheduled(varTime); }
-
-        /// <summary>
-        /// 暂停音频
-        /// </summary>
-        public void PauseAudio(AudioSource varAudioSource) { varAudioSource.Pause(); }
-
-        /// <summary>
-        /// 停止音频
-        /// </summary>
-        public void StopAudio(AudioSource varAudioSource) { varAudioSource.Stop(); }
+        public static void StopAudio(AudioSource audioSource) { audioSource.Stop(); }
 
         /// <summary>
         /// 剪切空白部分
         /// </summary>
-        public AudioClip CutBlankSection(AudioClip varAudioClip, int varTime, int varSamplingRate)
+        public static AudioClip CutBlankSection(AudioClip audioClip, int time, int samplingRate)
         {
-            float[] tempSamples1 = new float[varAudioClip.samples];
+            float[] samples_one = new float[audioClip.samples];
 
-            varAudioClip.GetData(tempSamples1, 0);
+            audioClip.GetData(samples_one, 0);
 
-            Debug.Log(tempSamples1.Length);
+            float[] samples_two = new float[time * samplingRate];
 
-            float[] tempSamples = new float[varTime * varSamplingRate];
+            Array.Copy(samples_one, 0, samples_two, 0, time * samplingRate);
 
-            Array.Copy(tempSamples1, 0, tempSamples, 0, varTime * varSamplingRate);
+            AudioClip newAudioClip = AudioClip.Create(audioClip.name, samplingRate * time, 1, samplingRate, false);
+            newAudioClip.SetData(samples_two, 0);
 
-            Debug.Log(tempSamples.Length);
-
-            AudioClip tempAudioClip = AudioClip.Create(varAudioClip.name, varSamplingRate * varTime, 1, varSamplingRate, false);
-            tempAudioClip.SetData(tempSamples, 0);
-
-            return tempAudioClip;
+            return newAudioClip;
         }
 
         /// <summary>
         /// 合并音频
         /// </summary>
-        public AudioClip MergeAudio(int varInterval, params AudioClip[] varClips)
+        public static AudioClip MergeAudio(int interval, params AudioClip[] clips)
         {
-            if (varClips == null || varClips.Length == 0)
+            if (clips == null || clips.Length == 0)
                 return null;
 
-            int tempChannels = varClips[0].channels;
-            int tempFrequency = varClips[0].frequency;
-            //for (int i = 1; i < varClips.Length; i++) { if (varClips[i].channels != tempChannels || varClips[i].frequency != tempFrequency) { return null; } }
+            int channels = clips[0].channels;
+            int frequency = clips[0].frequency;
 
-            using (MemoryStream tempMemoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                for (int i = 0; i < varClips.Length; i++)
+                for (int i = 0; i < clips.Length; i++)
                 {
-                    if (varClips[i] == null)
+                    if (clips[i] == null)
                         continue;
 
-                    varClips[i].LoadAudioData();
+                    clips[i].LoadAudioData();
 
-                    var tempBuffer = varClips[i].GetData();
+                    var buffer = clips[i].GetData();
 
-                    tempMemoryStream.Write(tempBuffer, 0, tempBuffer.Length);
+                    memoryStream.Write(buffer, 0, buffer.Length);
 
-                    if (varClips.Length - 1 == i)
+                    if (clips.Length - 1 == i)
                         continue;
 
-                    byte[] tempByte = new byte[varClips[i].frequency * varClips[i].channels * 4 * varInterval];//合并音频间的间隔
-                    tempMemoryStream.Write(tempByte, 0, tempByte.Length);
+                    byte[] byteClips = new byte[clips[i].frequency * clips[i].channels * 4 * interval];//合并音频间的间隔
+                    memoryStream.Write(byteClips, 0, byteClips.Length);
                 }
 
-                var tempBytes = tempMemoryStream.ToArray();
-                //var tempResult = AudioClip.Create("Merge", tempBytes.Length / 4 / tempChannels, tempChannels, tempFrequency, false);
-                var tempResult = AudioClip.Create("Merge", tempBytes.Length / 4 / tempChannels, tempChannels, 44100, false);
+                var bytes = memoryStream.ToArray();
+                
+                var result = AudioClip.Create("Merge", bytes.Length / 4 / channels, channels, 44100, false);
 
-                tempResult.SetData(tempBytes);
+                result.SetData(bytes);
 
-                return tempResult;
+                return result;
             }
         }
 
-        /// <summary>
-        /// 保存音频
-        /// </summary>
-        public IEnumerator SaveAudio(AudioClip tempClip, string tempPath)
+        public static IEnumerator SaveAudio(AudioClip clip, string path)
         {
-            string tempFilePath = Path.GetDirectoryName(tempPath);
-            if (!Directory.Exists(tempFilePath))
+            Project.CreateDirectory(Path.GetDirectoryName(path));
+
+            using (FileStream fileStream = CreateEmpty(path))
             {
-                Directory.CreateDirectory(tempFilePath);
-            }
-            using (FileStream tempFileStream = CreateEmpty(tempPath))
-            {
-                ConvertAndWrite(tempFileStream, tempClip);
-                WriteHeader(tempFileStream, tempClip);
+                ConvertAndWrite(fileStream, clip);
+                WriteHeader(fileStream, clip);
             }
             yield return null;
         }
@@ -167,7 +115,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 音频转换WAV字节流
         /// </summary>
-        public byte[] AudioTurnBytes(AudioClip clip, int varTime, int varSampLing)
+        public static byte[] AudioTurnBytes(AudioClip clip, int varTime, int varSampLing)
         {
             byte[] bytes = null;
 
@@ -196,7 +144,7 @@ namespace Epitome.Utility
                 byte[] subChunk1 = BitConverter.GetBytes(16);
                 tempMemoryStream.Write(subChunk1, 0, 4);
 
-                UInt16 two = 2;
+                //UInt16 two = 2;
                 UInt16 one = 1;
 
                 byte[] audioFormat = BitConverter.GetBytes(one);
@@ -235,7 +183,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 转换音频
         /// </summary>
-        public byte[] ConvertAndWrite(AudioClip varAudioClip, int varTime, int varSamplingRate)
+        public static byte[] ConvertAndWrite(AudioClip varAudioClip, int varTime, int varSamplingRate)
         {
             float[] tempSamples1 = new float[varAudioClip.samples];
 
@@ -249,7 +197,7 @@ namespace Epitome.Utility
 
             Debug.Log(tempSamples.Length);
 
-            return Data.GetSingleton().FloatTurnBytes(tempSamples);
+            return Data.FloatTurnBytes(tempSamples);
         }
 
         //=================   音频转码  ======================
@@ -257,7 +205,7 @@ namespace Epitome.Utility
         /// <summary>
         /// Wav音频转换字节流
         /// </summary>
-        public byte[] WavTurnBytes(string varStr)
+        public static byte[] WavTurnBytes(string varStr)
         {
             FileStream tempFile = new FileStream(varStr, FileMode.Open);
             byte[] tempBuffer = new byte[tempFile.Length];
@@ -270,7 +218,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 字节流转换Wav音频
         /// </summary>
-        public string BytesTurnWav(string varPath, byte[] varByte)
+        public static string BytesTurnWav(string varPath, byte[] varByte)
         {
             FileStream tempFile = new FileStream(varPath, FileMode.Create);//新建文件
             tempFile.Write(varByte, 0, varByte.Length);
@@ -282,7 +230,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 转换写入音频
         /// </summary>
-        void ConvertAndWrite(FileStream varFileStream, AudioClip tempClip)
+        static void ConvertAndWrite(FileStream varFileStream, AudioClip tempClip)
         {
             //byte[] tempByte = AudioTurnBytes(tempClip);
             //varFileStream.Write(tempByte, 0, tempByte.Length);
@@ -291,23 +239,23 @@ namespace Epitome.Utility
         /// <summary>
         /// 创建文件
         /// </summary>
-        FileStream CreateEmpty(string varFilepath)
+        static FileStream CreateEmpty(string filePath)
         {
-            FileStream tempFileStream = new FileStream(varFilepath, FileMode.Create);
-            byte tempByte = new byte();
+            FileStream fileStream = new FileStream(filePath, FileMode.Create);
+            byte byteFile = new byte();
 
             for (int i = 0; i < 44; i++)
             {
-                tempFileStream.WriteByte(tempByte);
+                fileStream.WriteByte(byteFile);
             }
 
-            return tempFileStream;
+            return fileStream;
         }
 
         /// <summary>
         /// 添加报头
         /// </summary>
-        void WriteHeader(FileStream tempFileStream, AudioClip tempClip)
+        static void WriteHeader(FileStream tempFileStream, AudioClip tempClip)
         {
             int tempFrequency = tempClip.frequency;
             int tempChannels = tempClip.channels;

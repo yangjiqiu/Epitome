@@ -40,7 +40,7 @@ namespace Epitome.Utility
                 tempTexture2D.SetPixels32(tempColor32);
                 //保存图片
                 byte[] bytes = tempTexture2D.EncodeToPNG();
-                Project.GetSingleton().CreateDirectory(Application.dataPath + "/AdamBieber");
+                Project.CreateDirectory(Application.dataPath + "/AdamBieber");
                 string fileName;
                 if (varName == "")
                     fileName = Application.dataPath + "/AdamBieber/" + varStr + ".png";
@@ -75,7 +75,7 @@ namespace Epitome.Utility
                     case BarcodeFormat.QR_CODE:
                         break;
                 }
-                EventManager.GetSingleton().BroadcastEvent(varStr, data);
+                EventManager.Instance.BroadcastEvent(varStr, data);
             }
         }
 

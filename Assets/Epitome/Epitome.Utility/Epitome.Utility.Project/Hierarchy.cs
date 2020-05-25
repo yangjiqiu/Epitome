@@ -39,7 +39,7 @@ namespace Epitome.Utility
                 }
             }
 
-            return Data.GetSingleton().ListTurnArray(tempTrans);
+            return tempTrans.ToArray();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Epitome.Utility
                 }
             }
 
-            return Data.GetSingleton().ListTurnArray(tempTrans);
+            return tempTrans.ToArray();
         }
 
 #if NGUI
