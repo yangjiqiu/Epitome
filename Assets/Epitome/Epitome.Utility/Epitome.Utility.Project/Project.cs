@@ -16,13 +16,19 @@ namespace Epitome.Utility
         public static void CreateFile(string path)
         {
             if (!FileExists(path))
+            {
                 File.CreateText(path);
+                AssetDatabase.Refresh();
+            }
         }
             
         public static void CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
+            {
                 Directory.CreateDirectory(path);
+                AssetDatabase.Refresh();
+            }
         }
         
         public static void CreateMultipleDirectories(string path, string[] names)
@@ -45,18 +51,39 @@ namespace Epitome.Utility
             return Directory.Exists(path);
         }
 
-        public static string[] DirectoryAllFileNames(string path)
+        public static List<string> DirectoryAllFileNames(string path)
         {
-            string[] strs = new string[] { };
-            if (FileExists(path))
+            if (DirectoryExists(path))
             {
+                List<string> strs = new List<string>();
                 DirectoryInfo direInfo = new DirectoryInfo(path);
                 FileInfo[] files = direInfo.GetFiles("*", SearchOption.AllDirectories);
 
                 for (int i = 0; i < files.Length; i++)
                 {
                     if (files[i].Name.EndsWith(".meta")) continue;
-                    strs[strs.Length] = files[i].Name;
+                    strs.Add(files[i].Name);
+                }
+                return strs;
+            }
+            return null;
+        }
+
+        public static List<string> DirectoryAllFileNames(string path, List<string> suffixs)
+        {
+            if (DirectoryExists(path))
+            {
+                List<string> strs = new List<string>();
+                DirectoryInfo direInfo = new DirectoryInfo(path);
+                FileInfo[] files = direInfo.GetFiles("*", SearchOption.AllDirectories);
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".meta")) continue;
+                    string[] fileName = files[i].Name.Split('.');
+                    Debug.Log(fileName[fileName.Length - 1]);
+                    if (suffixs.Contains(fileName[fileName.Length - 1]))
+                        strs.Add(files[i].Name);
                 }
                 return strs;
             }
