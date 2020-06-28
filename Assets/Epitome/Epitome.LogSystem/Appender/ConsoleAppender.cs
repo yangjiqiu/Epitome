@@ -1,6 +1,6 @@
 using System;
 
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public class ConsoleAppender : ILogAppender
     {

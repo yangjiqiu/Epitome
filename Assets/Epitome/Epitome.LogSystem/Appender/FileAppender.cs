@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using UnityEngine;
 
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public class FileAppender : AsyncTask<FileAppender>, ILogAppender
     {

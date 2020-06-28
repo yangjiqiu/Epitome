@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public class Log
     {
@@ -72,9 +72,19 @@ namespace Epitome.Logging
             Logging.Instance.LoadAppenders(type);
         }
 
+        public static void LoadAppenders(ILogAppender appender)
+        {
+            Logging.Instance.LoadAppenders(appender);
+        }
+
         public static void UnloadAppenders(AppenderType type)
         {
             Logging.Instance.UnloadAppenders(type);
+        }
+
+        public static void UnloadAppenders(ILogAppender appender)
+        {
+            Logging.Instance.UnloadAppenders(appender);
         }
 
         public static void Trace(object message)

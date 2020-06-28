@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 
-namespace Epitome
+namespace Epitome.Audio
 {
     using Epitome.Utility;
     using Hardware;

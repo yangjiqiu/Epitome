@@ -29,6 +29,11 @@ namespace Epitome
         public static int maxThreads = 8;
         private static int numThreads;
 
+        public static void QueueOnMainThread(Action<object> action)
+        {
+            QueueOnMainThread(action, null, 0f);
+        }
+
         public static void QueueOnMainThread(Action<object> action,object param)
         {
             QueueOnMainThread(action, param, 0f);

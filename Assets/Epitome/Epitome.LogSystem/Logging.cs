@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public delegate void LogCall(string logLevel, string message);
 
@@ -75,10 +75,6 @@ namespace Epitome.Logging
         private Logging()
         {
             allAppender = new Dictionary<AppenderType, ILogAppender>();
-            //allAppender.Add(AppenderType.GUI, GUIAppender.Instance);
-            //allAppender.Add(AppenderType.File, FileAppender.Instance);
-            //allAppender.Add(AppenderType.Console,new ConsoleAppender());
-            //allAppender.Add(AppenderType.Window, new WindowAppender());
 
             appenders = new List<ILogAppender>();
 
@@ -88,6 +84,13 @@ namespace Epitome.Logging
         private System.Diagnostics.StackTrace StackTrace
         {
             get { return new System.Diagnostics.StackTrace(3, true); }
+        }
+
+        public void LoadAppenders(ILogAppender appender)
+        {
+            if (appenders.Contains(appender)) return;
+
+            appenders.Add(appender);
         }
 
         public void LoadAppenders(AppenderType type)
@@ -100,32 +103,31 @@ namespace Epitome.Logging
                     allAppender.Add(AppenderType.Console, new ConsoleAppender());
                     break;
                 case AppenderType.GUI:
-                    allAppender.Add(AppenderType.Console, GUIAppender.Instance);
+                    allAppender.Add(AppenderType.GUI, GUIAppender.Instance);
                     break;
                 case AppenderType.File:
-                    allAppender.Add(AppenderType.Console, FileAppender.Instance);
+                    allAppender.Add(AppenderType.File, FileAppender.Instance);
                     break;
                 case AppenderType.Window:
-                    allAppender.Add(AppenderType.Console, new WindowAppender());
+                    allAppender.Add(AppenderType.Window, new WindowAppender());
                     break;
             }
 
-            ILogAppender appender = allAppender.GetValue(type);
+            LoadAppenders(allAppender.GetValue(type));
+        }
 
-            if (appenders.Contains(appender)) return;
+        public void UnloadAppenders(ILogAppender appender)
+        {
+            if (!appenders.Contains(appender)) return;
 
-            appenders.Add(appender);
+            appenders.Remove(appender);
         }
 
         public void UnloadAppenders(AppenderType type)
         {
             if (!allAppender.ContainsKey(type)) return;
 
-            ILogAppender appender = allAppender.GetValue(type);
-
-            if (!appenders.Contains(appender)) return;
-
-            appenders.Remove(appender);
+            UnloadAppenders(allAppender.GetValue(type));
         }
 
         public void SetLogCall(LogCall logCall) { }

@@ -1,4 +1,4 @@
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public class WindowAppender : ILogAppender
     {

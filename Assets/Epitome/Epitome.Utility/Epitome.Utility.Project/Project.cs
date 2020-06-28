@@ -18,7 +18,9 @@ namespace Epitome.Utility
             if (!FileExists(path))
             {
                 File.CreateText(path);
+#if UNITY_EDITOR
                 AssetDatabase.Refresh();
+# endif
             }
         }
             
@@ -27,7 +29,9 @@ namespace Epitome.Utility
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
+#if UNITY_EDITOR
                 AssetDatabase.Refresh();
+# endif
             }
         }
         
@@ -81,9 +85,28 @@ namespace Epitome.Utility
                 {
                     if (files[i].Name.EndsWith(".meta")) continue;
                     string[] fileName = files[i].Name.Split('.');
-                    Debug.Log(fileName[fileName.Length - 1]);
                     if (suffixs.Contains(fileName[fileName.Length - 1]))
                         strs.Add(files[i].Name);
+                }
+                return strs;
+            }
+            return null;
+        }
+
+        public static List<string> DirectoryAllFileFullName(string path, List<string> suffixs)
+        {
+            if (DirectoryExists(path))
+            {
+                List<string> strs = new List<string>();
+                DirectoryInfo direInfo = new DirectoryInfo(path);
+                FileInfo[] files = direInfo.GetFiles("*", SearchOption.AllDirectories);
+
+                for (int i = 0; i < files.Length; i++)
+                {
+                    if (files[i].Name.EndsWith(".meta")) continue;
+                    string[] fileName = files[i].Name.Split('.');
+                    if (suffixs.Contains(fileName[fileName.Length - 1]))
+                        strs.Add(files[i].FullName);
                 }
                 return strs;
             }

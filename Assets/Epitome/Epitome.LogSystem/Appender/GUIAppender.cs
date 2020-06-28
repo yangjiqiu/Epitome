@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Epitome.Logging
+namespace Epitome.LogSystem
 {
     public class GUIAppender : AsyncTask<GUIAppender>, ILogAppender
     {

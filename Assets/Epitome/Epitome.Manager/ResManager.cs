@@ -2,19 +2,20 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using Object = UnityEngine.Object;
 
 namespace Epitome
 {
     public class AssetInfo
     {
-        private UnityEngine.Object _Object;
+        private Object _Object;
         public Type AssetType { get; set; }
         public string Path { get; set; }
         public int RefCount { get; set; }
 
         public bool IsLoaded { get { return _Object != null; } }
 
-        public UnityEngine.Object AssetObject
+        public Object AssetObject
         {
             get
             {
@@ -27,7 +28,7 @@ namespace Epitome
             }
         }
 
-        public IEnumerator GetCorouttineObject(Action<UnityEngine.Object> loaded)
+        public IEnumerator GetCorouttineObject(Action<Object> loaded)
         {
             while (true)
             {
@@ -63,12 +64,12 @@ namespace Epitome
             }
         }
 
-        public IEnumerator GetAsyncObject(Action<UnityEngine.Object> loaded)
+        public IEnumerator GetAsyncObject(Action<Object> loaded)
         {
             return GetAsyncObject(loaded, null);
         }
 
-        public IEnumerator GetAsyncObject(Action<UnityEngine.Object> loaded, Action<float> progress)
+        public IEnumerator GetAsyncObject(Action<Object> loaded, Action<float> progress)
         {
             if (_Object != null)
             {
@@ -120,28 +121,28 @@ namespace Epitome
             base.OnSingletonInit();
         }
 
-        public UnityEngine.Object LoadInstance(string path)
+        public Object LoadInstance(string path)
         {
-            UnityEngine.Object obj = Load(path);
+            Object obj = Load(path);
             return Instantiate(obj);
         }
 
-        public void LoadCoroutineInstance(string path,Action<UnityEngine.Object> loaded)
+        public void LoadCoroutineInstance(string path,Action<Object> loaded)
         {
             LoadCoroutine(path, (obj) => { Instantiate(obj, loaded); });
         }
 
-        public void LoadAsyncInstance(string path, Action<UnityEngine.Object> loaded)
+        public void LoadAsyncInstance(string path, Action<Object> loaded)
         {
             LoadAsync(path, (obj) => { Instantiate(obj, loaded); });
         }
 
-        public void LoadAsyncInstance(string path, Action<UnityEngine.Object> loaded, Action<float> progress)
+        public void LoadAsyncInstance(string path, Action<Object> loaded, Action<float> progress)
         {
             LoadAsync(path, (obj) => { Instantiate(obj, loaded); }, progress);
         }
 
-        public UnityEngine.Object Load(string path)
+        public Object Load(string path)
         {
             AssetInfo assetInfo = GetAssetInfo(path);
             
@@ -153,7 +154,7 @@ namespace Epitome
             return null;
         }
 
-        public void LoadCoroutine(string path,Action<UnityEngine.Object> loaded)
+        public void LoadCoroutine(string path,Action<Object> loaded)
         {
             AssetInfo assetInfo = GetAssetInfo(path, loaded);
             if (assetInfo!=null)
@@ -162,12 +163,12 @@ namespace Epitome
             }
         }
 
-        public void LoadAsync(string path, Action<UnityEngine.Object> loaded)
+        public void LoadAsync(string path, Action<Object> loaded)
         {
             LoadAsync(path, loaded, null);
         }
 
-        public void LoadAsync(string path,Action<UnityEngine.Object> loaded,Action<float> progress)
+        public void LoadAsync(string path,Action<Object> loaded,Action<float> progress)
         {
             AssetInfo assetInfo = GetAssetInfo(path, loaded);
             if (assetInfo != null)
@@ -181,7 +182,7 @@ namespace Epitome
            return GetAssetInfo(path,null);
         }
 
-        public AssetInfo GetAssetInfo(string path,Action<UnityEngine.Object> loaded)
+        public AssetInfo GetAssetInfo(string path,Action<Object> loaded)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -206,14 +207,14 @@ namespace Epitome
             return assetInfo;
         }
 
-        public UnityEngine.Object Instantiate(UnityEngine.Object obj)
+        public Object Instantiate(Object obj)
         {
             return Instantiate(obj,null);
         }
 
-        public UnityEngine.Object Instantiate(UnityEngine.Object obj,Action<UnityEngine.Object> loaded)
+        public Object Instantiate(Object obj,Action<Object> loaded)
         {
-            UnityEngine.Object retObj = null;
+            Object retObj = null;
 
             if (obj != null)
             {

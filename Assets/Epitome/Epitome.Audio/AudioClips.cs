@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Epitome
+namespace Epitome.Audio
 {
     public class AudioClips
     {

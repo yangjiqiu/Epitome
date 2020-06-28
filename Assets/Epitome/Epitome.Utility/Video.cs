@@ -7,6 +7,7 @@ using UnityEngine.Video;
 namespace Epitome.Utility
 {
     using Hardware;
+    using UnityEngine;
 
     /// <summary>
     /// 视频

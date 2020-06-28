@@ -67,12 +67,6 @@ namespace Epitome.HelpTool
                 Project.CreateFile(paths[i] + "/New File." + suffix);
             }
         }
-
-        /// <summary>
-        /// 打包AssetBundle资源
-        /// </summary>
-        [MenuItem("HelpTool/Pack/AssetBundle")]
-        private static void PackAssetBundle() { Packaged.Instance.PackAssetBundle(); }
 #endif
     }
 }

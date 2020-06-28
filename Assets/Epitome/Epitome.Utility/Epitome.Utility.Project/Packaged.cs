@@ -22,7 +22,7 @@ namespace Epitome.Utility
     /// <summary>
     /// 打包
     /// </summary>
-    public class Packaged : Singleton<Packaged>
+    public static class Packaged
     {
 
         //++++++++++++++++++++     打包资源     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -31,18 +31,16 @@ namespace Epitome.Utility
         /// <summary>
         /// 打包AssetBundle
         /// </summary>
-        public void PackAssetBundle()
+        [MenuItem("Epitome/Packaged/AssetBundle")]
+        public static void PackAssetBundle()
         {
-
             // 打开保存面板，获得用户选择的路径  
-            string tempPath = EditorUtility.SaveFilePanel("Save Resource", "", "New Resource", "assetbundle");
+            string tempPath = EditorUtility.OpenFolderPanel("Open Folder", Application.dataPath ,"");
 
-            if (tempPath.Length != 0)
-            {
-                // 选择的要保存的对象  
-                //Object[] tempSelection = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+            //Object[] tempSelection = Selection.GetFiltered(typeof(Object), SelectionMode.DeepAssets);
+            //if (tempPath.Length != 0)
+            //{
                 BuildTarget buildTarget;
-
 #if UNITY_ANDROID
                 buildTarget = BuildTarget.Android;
 #elif UNITY_IPHONE
@@ -51,21 +49,34 @@ namespace Epitome.Utility
                 buildTarget = BuildTarget.StandaloneWindows;
 #endif
 
+                ////文件已经存在就删除  
+                //if (Directory.Exists(tempPath))
+                //{
+                //    Directory.Delete(tempPath, true);
+                //}
+                ////文件不存在就创建  
+                //if (!Directory.Exists(tempPath))
+                //{
+                //    Directory.CreateDirectory(tempPath);
+                //}
+
                 //打包
-                //BuildPipeline.BuildAssetBundle(Selection.activeObject, tempSelection, tempPath, BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets, tempBuildTarget);
-                BuildPipeline.BuildAssetBundles("文件名", BuildAssetBundleOptions.None, buildTarget);
-                new Task(UploadFile(tempPath));
-                XmlDocument tempXmlDocument;
-                string tempRoot = GetVersionFile(tempPath, out tempXmlDocument);
-                ModifyEdition(tempPath, tempRoot, tempXmlDocument, GetVersionNumberMD5(tempPath));
-            }
+                //BuildPipeline.BuildAssetBundle(Selection.activeObject, tempSelection, tempPath, BuildAssetBundleOptions.CollectDependencies | BuildAssetBundleOptions.CompleteAssets, buildTarget);
+                //BuildPipeline.BuildAssetBundles("文件名", BuildAssetBundleOptions.None, buildTarget);
+                AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles("Assets/StreamingAssets", BuildAssetBundleOptions.None, buildTarget);
+
+                if (manifest == null)
+                    Debug.LogError("AssetBundle 打包失败！");
+                else
+                    Debug.Log("AssetBundle 打包完毕");
+           // }
         }
 
 #endif
         /// <summary>
         /// 获取版本文件
         /// </summary>
-        public string GetVersionFile(string varPath, out XmlDocument verXml)
+        public static string GetVersionFile(string varPath, out XmlDocument verXml)
         {
             string tempRoot = Path.GetDirectoryName(varPath);
             Project.CreateDirectory(tempRoot);
@@ -85,7 +96,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 获取版本号(MD5)
         /// </summary>
-        public string GetVersionNumberMD5(string varPata)
+        public static string GetVersionNumberMD5(string varPata)
         {
             FileStream tempFileStream = File.Open(varPata, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             byte[] tempByteFile = new byte[(int)tempFileStream.Length];
@@ -102,7 +113,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 修改版本
         /// </summary>
-        public void ModifyEdition(string varPath, string varRoot, XmlDocument verXml, string varVersion)
+        public static void ModifyEdition(string varPath, string varRoot, XmlDocument verXml, string varVersion)
         {
             XmlNodeList tempFileXnl = verXml.GetElementsByTagName("file");
             XmlNode tempXn = null;
@@ -136,7 +147,7 @@ namespace Epitome.Utility
         /// <summary>
         /// 上传文件
         /// </summary>
-        public IEnumerator UploadFile(string varPath)
+        public static IEnumerator UploadFile(string varPath)
         {
             WWWForm tempForm = new WWWForm();
             string[] tempSp = varPath.Split('/');

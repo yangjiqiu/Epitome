@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Epitome
 {
 	public static class EditorExtension
 	{
+#if UNITY_EDITOR
         /// <summary>
         /// 获取Project面板选择路径
         /// </summary>
@@ -26,5 +29,6 @@ namespace Epitome
 
             return selectPath;
         }
+#endif
     }
 }

@@ -1,4 +1,4 @@
-namespace Epitome.Debugging
+namespace Epitome.LogSystem
 {
     public static class LogExtension
     {

@@ -11,7 +11,7 @@ using Epitome.Utility;
 using UnityEditor;
 #endif
 
-namespace Epitome
+namespace Epitome.Audio
 {
     public static class AudioConverter
     {
@@ -42,9 +42,6 @@ namespace Epitome
                     saveFilePath = savePath + "/" + strs[j].Substring(0, strs[j].Length - 3) + "wav";
                     MP3TurnWAV(targetFilePath, saveFilePath);
                 }
-#if UNITY_EDITOR
-                AssetDatabase.Refresh();
-#endif
             }
         }
 
