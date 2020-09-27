@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cded01a4d6d79443b1b39e85f80a012, type: 3}
+  m_Name: LogSystemAsset
+  m_EditorClassIdentifier: 
+  WindowIcons:
+  - {fileID: 2800000, guid: 7fa4ec0f12ea0b449b16f7fd3a5eac36, type: 3}
+  - {fileID: 2800000, guid: e00a035b18e3a4a48af6d0ea32c81494, type: 3}
+  - {fileID: 2800000, guid: 259366aa2ce7f054b81fef24ff4448b6, type: 3}
+  LogLevelIcons:
+  - {fileID: 2800000, guid: d676d24ef1718a3449f177c0228c7cae, type: 3}
+  - {fileID: 2800000, guid: 7fa4ec0f12ea0b449b16f7fd3a5eac36, type: 3}
+  - {fileID: 2800000, guid: 2b073a7ba6fce3d4a8eda85c8c44cc24, type: 3}
+  - {fileID: 2800000, guid: 60856b58d941410449613a1f47e4ca84, type: 3}
+  - {fileID: 2800000, guid: e00a035b18e3a4a48af6d0ea32c81494, type: 3}
+  - {fileID: 2800000, guid: 259366aa2ce7f054b81fef24ff4448b6, type: 3}
+  LogCountIcon: {fileID: 2800000, guid: 35118313edab3e44c807173743664a3a, type: 3}

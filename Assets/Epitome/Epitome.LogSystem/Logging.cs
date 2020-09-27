@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace Epitome.LogSystem
 {
@@ -70,6 +71,8 @@ namespace Epitome.LogSystem
 
         public LogLevel logLevel { get; set; }
 
+        public LogSystemAsset logSystemAsset { get; private set; }
+
         private List<LogLevel> ignoreLevel;
 
         private Logging()
@@ -79,6 +82,8 @@ namespace Epitome.LogSystem
             appenders = new List<ILogAppender>();
 
             ignoreLevel = new List<LogLevel>();
+
+            logSystemAsset = Resources.Load<LogSystemAsset>("LogSystemAsset");
         }
 
         private System.Diagnostics.StackTrace StackTrace
