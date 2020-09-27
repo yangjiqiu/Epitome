@@ -1,4 +1,4 @@
-﻿/* $Header:   Assets/Epitome/Epitome.LogSystem/Appender/MobileGUIAppender.cs   1.0   2020/06/28 Sunday AM 11:48:52   Ji Qiu .Yang   2017.1.1f1  $ */
+/* $Header:   Assets/Epitome/Epitome.LogSystem/Appender/MobileGUIAppender.cs   1.0   2020/06/28 Sunday AM 11:48:52   Ji Qiu .Yang   2017.1.1f1  $ */
 /***********************************************************************************************
  ***              C O N F I D E N T I A L  ---  E P I T O M E  S T U D I O S                 ***
  ***********************************************************************************************
@@ -531,7 +531,7 @@ namespace Epitome.LogSystem
             
             
             
-            logCollapseCountStyle.CalcMinMaxWidth 
+            //logCollapseCountStyle.CalcMinMaxWidth 
             //logCollapseCountStyle.CalcScreenSize( new Vector2(30,30));
         } 
 
