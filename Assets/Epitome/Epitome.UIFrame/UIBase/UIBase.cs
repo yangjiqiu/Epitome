@@ -5,31 +5,7 @@ namespace Epitome.UIFrame
 {
     public abstract class UIBase : EpitomeBehaviour
     {
-        private Transform cachedTransform;
-
-        public Transform CachedTransform
-        {
-            get
-            {
-                if (!cachedTransform)
-                    cachedTransform = this.transform;
-
-                return cachedTransform;
-            }
-        }
-
-        private GameObject cachedGameObject;
-
-        public GameObject CachedGameObject
-        {
-            get
-            {
-                if (!cachedGameObject)
-                    cachedGameObject = this.gameObject;
-
-                return cachedGameObject;
-            }
-        }
+        public event StateChangedEvent StateChanged;
 
         protected ObjectState state = ObjectState.None;
 
@@ -40,7 +16,7 @@ namespace Epitome.UIFrame
                 if (value != state)
                 {
                     ObjectState oldState = state;
-                     state = value;
+                    state = value;
                     if (StateChanged != null)
                     {
                         StateChanged(this,state,oldState);
@@ -51,11 +27,16 @@ namespace Epitome.UIFrame
             get { return this.state; }
         }
 
-        public event StateChangedEvent StateChanged;
-
         public abstract string GetUIType();
 
         protected virtual void SetDepthToTop() { }
+
+        protected override void OnAwake()
+        {
+            this.State = ObjectState.Initial;
+        }
+
+        protected override void OnStart() { }
 
         protected override void OnUpdate()
         {
@@ -65,22 +46,14 @@ namespace Epitome.UIFrame
             }
         }
 
+        protected virtual void OnUpdate(float deltaTime) { }
+
         public void Release()
         {
             this.State = ObjectState.Closing;
-            GameObject.Destroy(cachedGameObject);
+            GameObject.Destroy(this.gameObject);
             OnRelease();
         }
-
-        protected override void OnStart() { }
-
-        protected override void OnAwake()
-        {
-            this.State = ObjectState.Initial;
-            this.State = ObjectState.Loading;
-        }
-
-        protected void OnUpdate(float deltaTime) { }
 
         protected virtual void OnRelease() { }
 

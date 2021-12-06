@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,11 +11,10 @@ namespace Epitome.UIFrame
 
         class UIInfoData
         {
-            public string UIType { get; private set; }  // UI类型
+            public string UIType { get; private set; }
 
-            public string UITypeTag { get; private set; } // 当需要加载相同类型时使用
-
-            //public Type ScriptType { get; private set; }
+            // 当需要加载相同类型时使用
+            public string UITag { get; private set; } 
 
             public string Path { get; private set; }
 
@@ -26,15 +25,14 @@ namespace Epitome.UIFrame
                 this.UIType = uiType;
                 this.Path = path;
                 this.UIParams = uiParams;
-                //this.ScriptType = this.GetType();
             }
-            public UIInfoData(string uiType, string uiTypeTag, string path, params object[] uiParams)
+
+            public UIInfoData(string uiType, string uiTag, string path, params object[] uiParams)
             {
                 this.UIType = uiType;
-                this.UITypeTag = uiTypeTag;
+                this.UITag = uiTag;
                 this.Path = path;
                 this.UIParams = uiParams;
-                //this.ScriptType = this.GetType();
             }
         }
 
@@ -51,7 +49,6 @@ namespace Epitome.UIFrame
         // 可加载多个同类型UI
         private Dictionary<string, List<string>> UIType_Tags = null;
 
-
         public override void OnSingletonInit()
         {
             UIPrefab_Paths = new Dictionary<string, string>();
@@ -65,23 +62,24 @@ namespace Epitome.UIFrame
             base.OnSingletonInit();
         }
 
-        public TUI GetUI<TUI>(string uiType) where TUI : UIBase
+        public T GetUI<T>(string uiType) where T : UIBase
         {
-            GameObject tryObj = GetUIObject(uiType);
-            if (tryObj != null)
+            GameObject obj = GetUIObject(uiType);
+            if (obj != null)
             {
-                return tryObj.GetComponent<TUI>();
+                return obj.GetComponent<T>();
             }
             return null;
         }
+
         public GameObject GetUIObject(string uiType)
         {
-            GameObject retObj = null;
-            if (!UIObject_Pool.TryGetValue(uiType, out retObj))
+            GameObject obj = null;
+            if (!UIObject_Pool.TryGetValue(uiType, out obj))
             {
                 throw new Exception("UIObjectPool TryGetValue Failure! uiType:" + uiType);
             }
-            return retObj;
+            return obj;
         }
 
         public void PreloadUI(string uiType, string prefabPath)
@@ -232,10 +230,12 @@ namespace Epitome.UIFrame
                 new Task(AsyncLoadData());
             }
         }
+
         public void CloseSameKindUI(string uiType, string tag)
         {
             CloseUI(string.Format("{0}_{1}", uiType, tag));
         }
+
         private IEnumerator<int> AsyncLoadData()
         {
             UIInfoData uiInfoData = null;
@@ -254,21 +254,21 @@ namespace Epitome.UIFrame
                         uiObject = ResManager.Instance.Instantiate(prefabObj) as GameObject;
 
                         string name = "";
-                        if (uiInfoData.UITypeTag == null)
+                        if (uiInfoData.UITag == null)
                         {
                             name = uiInfoData.UIType;
                         }
                         else
                         {
-                            //List<string> tags;
+                            List<string> tags;
 
-                            //if (!UIType_Tags.TryGetValue(uiInfoData.UIType, out tags))
-                            //    tags = new List<string>();
+                            if (!UIType_Tags.TryGetValue(uiInfoData.UIType, out tags))
+                                tags = new List<string>();
 
-                            //tags.Add(uiInfoData.UITypeTag);
-                            //UIType_Tags.Add(uiInfoData.UIType, tags);
+                            tags.Add(uiInfoData.UITag);
+                            UIType_Tags.Add(uiInfoData.UIType, tags);
 
-                            name = string.Format("{0}_{1}", uiInfoData.UIType, uiInfoData.UITypeTag);
+                            name = string.Format("{0}_{1}", uiInfoData.UIType, uiInfoData.UITag);
                         }
 
                         uiObject.name = name;
@@ -284,7 +284,6 @@ namespace Epitome.UIFrame
 
                         if (ui == null)
                         {
-                            //ui = uiObject.AddComponent(uiInfoData.ScriptType) as UIBase;
                             throw new Exception("Error:On GetComponent<UIBase> in Instantiate GameObject is null!");
                         }
 
