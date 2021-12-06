@@ -27,8 +27,8 @@ namespace Epitome.UIFrame
 
             maskColors = new Color[3];
             maskColors[0] = new Color(255 / 255F, 255 / 255F, 255 / 255F, 0F / 255F);
-            maskColors[1] = new Color(220 / 255F, 220 / 255F, 220 / 255F, 100 / 255F);
-            maskColors[2] = new Color(50 / 255F, 50 / 255F, 50 / 255F, 200F / 255F);
+            maskColors[1] = new Color(0, 0, 0, 100 / 255F);
+            maskColors[2] = new Color(0, 0, 0, 200F / 255F);
 
             base.OnSingletonInit();
         }

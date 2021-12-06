@@ -128,6 +128,8 @@ namespace Epitome.LogSystem
             }
 
             InitializeStyle();
+
+            CursorsControl.Instance.SetCursor(CursorType.Arrow);
         }
 
         public void Log(LogData logData)

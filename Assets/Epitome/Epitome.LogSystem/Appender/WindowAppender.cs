@@ -1,10 +1,8 @@
 namespace Epitome.LogSystem
 {
+    /// <summary>窗口输出</summary>
     public class WindowAppender : ILogAppender
     {
-        public void Log(LogData data)
-        {
-            throw new System.NotImplementedException();
-        }
+        public void Log(LogData data) { }
     }
 }

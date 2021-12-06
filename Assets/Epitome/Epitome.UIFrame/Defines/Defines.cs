@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace Epitome.UIFrame
 {
@@ -27,10 +28,10 @@ namespace Epitome.UIFrame
 
     public enum UIMaskType
     {
-        Lucency,            //ÍêÈ«Í¸Ã÷£¬²»ÄÜ´©Í¸
-        Translucence,       //°ëÍ¸Ã÷£¬²»ÄÜ´©Í¸
-        ImPenetrable,       //µÍÍ¸Ã÷£¬²»ÄÜ´©Í¸
-        Pentrate            //¿ÉÒÔ´©Í¸
+        Lucency,            //å®Œå…¨é€æ˜ï¼Œä¸èƒ½ç©¿é€
+        Translucence,       //åŠé€æ˜ï¼Œä¸èƒ½ç©¿é€
+        ImPenetrable,       //ä½é€æ˜ï¼Œä¸èƒ½ç©¿é€
+        Pentrate            //å¯ä»¥ç©¿é€
     }
 
     public enum UINodeType

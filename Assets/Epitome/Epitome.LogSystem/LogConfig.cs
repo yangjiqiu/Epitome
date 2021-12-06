@@ -1,5 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Epitome;
 using Epitome.LogSystem;
@@ -10,18 +8,27 @@ public class LogConfig : MonoSingleton<LogConfig>
     {
         DontDestroyOnLoad();
 
+        // 启用日志
         Log.EnableLog(true);
+
+        // 设置日志级别
         Log.LogLevel(LogLevel.ALL);
-        Log.LoadAppenders(MobileGUIAppender.Instance);
 
-        Log.Debug("qweqweqwe");
-        Log.Error("123123123132");
-        Log.Debug("qweqweqwe");
-        Log.Error("123123123132");
-        Log.Debug("qweqweqwe");
-        Log.Error("123123123132");
+        // 设置日志输出
+        Log.LoadAppenders(AppenderType.MobileGUI);
 
-        Log.Debug(Screen.width);
-        Log.Debug(Screen.height);
+        Log.Trace("开启日志系统");
+
+        // 注册Unity日志的监听
+        Log.RegisterLogMessage();
+
+        Debug.Log("注册Unity日志的监听");
+    }
+
+    protected override void OnDestroy()
+    {
+        // 注销Unity日志的监听
+        Log.UnRegisterLogMessage();
+        base.OnDestroy();
     }
 }

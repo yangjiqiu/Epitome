@@ -1,16 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BufferingForwardingAppender : MonoBehaviour {
+namespace Epitome.LogSystem
+{
+	public class BufferingForwardingAppender : MonoBehaviour
+	{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 }

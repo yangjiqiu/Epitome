@@ -18,7 +18,7 @@ namespace Epitome.LogSystem
                 {
                     pathLine = matches.Groups[1].Value;
 
-                    if (!pathLine.Contains("Epitome.LogSystem") && !pathLine.Contains("YLog"))
+                    if (!pathLine.Contains("Epitome.LogSystem"))
                     {
                         int splitIndex = pathLine.LastIndexOf(":");
                         string path = pathLine.Substring(0, splitIndex);
@@ -44,11 +44,6 @@ namespace Epitome.LogSystem
             {
                 if ((object)UnityEditor.EditorWindow.focusedWindow == consoleInstance)
                 {
-                    //var ListViewStateType = typeof(UnityEditor.EditorWindow).Assembly.GetType("UnityEditor.ListViewState");
-                    //fieldInfo = ConsoleWindowType.GetField("m_ListView", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                    //var listView = fieldInfo.GetValue(consoleInstance);
-                    //fieldInfo = ListViewStateType.GetField("row", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
-                    //int row = (int)fieldInfo.GetValue(listView);
                     fieldInfo = ConsoleWindowType.GetField("m_ActiveText", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                     string activeText = fieldInfo.GetValue(consoleInstance).ToString();
                     return activeText;
@@ -67,9 +62,57 @@ namespace Epitome.LogSystem
             Logging.Instance.logLevel = level;
         }
 
+        public static void RegisterLogMessage()
+        {
+            Application.logMessageReceived += HandleLog;
+        }
+
+        public static void UnRegisterLogMessage()
+        {
+            Application.logMessageReceived -= HandleLog;
+        }
+
+        public static void HandleLog(string condition, string stackTrace, LogType type)
+        {
+            switch (type)
+            {
+                case LogType.Error:
+                    Error((object)condition, stackTrace);
+                    break;
+                case LogType.Assert:
+                    break;
+                case LogType.Log:
+                    Debug((object)condition, stackTrace);
+                    break;
+                case LogType.Exception:
+                    Error((object)condition, stackTrace);
+                    break;
+                case LogType.Warning:
+                    Warn((object)condition, stackTrace);
+                    break;
+            }
+        }
+
         public static void LoadAppenders(AppenderType type)
         {
-            Logging.Instance.LoadAppenders(type);
+            switch (type)
+            {
+                case AppenderType.Console:
+                    LoadAppenders(new ConsoleAppender());
+                    break;
+                case AppenderType.GUI:
+                    LoadAppenders(GUIAppender.Instance);
+                    break;
+                case AppenderType.MobileGUI:
+                    LoadAppenders(MobileGUIAppender.Instance);
+                    break;
+                case AppenderType.File:
+                    LoadAppenders(FileAppender.Instance);
+                    break;
+                case AppenderType.Window:
+                    LoadAppenders(new WindowAppender());
+                    break;
+            }
         }
 
         public static void LoadAppenders(ILogAppender appender)
@@ -77,14 +120,14 @@ namespace Epitome.LogSystem
             Logging.Instance.LoadAppenders(appender);
         }
 
-        public static void UnloadAppenders(AppenderType type)
-        {
-            Logging.Instance.UnloadAppenders(type);
-        }
-
         public static void UnloadAppenders(ILogAppender appender)
         {
             Logging.Instance.UnloadAppenders(appender);
+        }
+
+        public static void UnloadAppenders(AppenderType type)
+        {
+            Logging.Instance.UnloadAppenders(type);
         }
 
         public static void Trace(object message)

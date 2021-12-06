@@ -6,11 +6,7 @@ namespace Epitome.LogSystem
     {
         public void Log(LogData data)
         {
-            string str;
-            if (data.logTrack == "")
-                str = String.Format("{0}\n[{1,-5}] {2}\n", data.logMessage, data.logLevel, data.logBasicData);
-            else
-                str = String.Format("{0}\n[{1,-5}] {2}\n{3}\n", data.logMessage, data.logLevel, data.logBasicData, data.logTrack);
+            string str = String.Format("{0}\n[{1,-5}] {2}\n", data.logMessage, data.logLevel, data.logBasicData);
 
             switch (data.logLevel)
             {

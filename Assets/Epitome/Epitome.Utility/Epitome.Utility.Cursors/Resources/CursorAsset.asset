@@ -12,11 +12,20 @@ MonoBehaviour:
   m_Name: CursorAsset
   m_EditorClassIdentifier: 
   Original:
+  - {fileID: 2800000, guid: 39749faaee15a4643bbbcaa2eb2c87ef, type: 3}
   - {fileID: 2800000, guid: 7bae965f231a7eb44a53de4e2d3edadc, type: 3}
-  - {fileID: 2800000, guid: a54f89eb17f0d8c468c6a0c4053618e7, type: 3}
-  - {fileID: 2800000, guid: c3b0b930722903b4faf98dc82d84d8e2, type: 3}
   - {fileID: 2800000, guid: e45c57040d0a8c143906753417077495, type: 3}
   - {fileID: 2800000, guid: 82cf1ea66e87a4b4d801cae56306067f, type: 3}
+  - {fileID: 2800000, guid: a89552fa9c26af04f804b9d114d3f496, type: 3}
+  - {fileID: 2800000, guid: 6a34690aba60e8b4eae6c106e458d8b5, type: 3}
+  - {fileID: 2800000, guid: 2913c35852681ad4499652401d35f679, type: 3}
+  - {fileID: 2800000, guid: eca9d0e4eecbef741b9cb50c682513a3, type: 3}
+  - {fileID: 2800000, guid: ad31a578dde4afb4581855e236938285, type: 3}
+  - {fileID: 2800000, guid: a54f89eb17f0d8c468c6a0c4053618e7, type: 3}
+  - {fileID: 2800000, guid: d279143eafb4efe46915612b6fd477a6, type: 3}
+  - {fileID: 2800000, guid: c3b0b930722903b4faf98dc82d84d8e2, type: 3}
+  - {fileID: 2800000, guid: 1dfe786f3dee21e4abc03b9648cb5f74, type: 3}
+  - {fileID: 2800000, guid: bcb3f8569080f744eb5e68ccc98ed35a, type: 3}
   Custom:
   - {fileID: 2800000, guid: ba456c0fd384eff4baa01de5b85ff42a, type: 3}
   - {fileID: 2800000, guid: 051d4278c827a2249bd3fb72f7f40f47, type: 3}
