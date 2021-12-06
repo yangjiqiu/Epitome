@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Epitome;
 
 /// <summary>卡牌显示视图</summary>
 public class CardShowView : BaseView
@@ -28,6 +29,6 @@ public class CardShowView : BaseView
         UIControl.CloseUI(UIPanelType.CardShowPanel);
 
         // 打开飞入特效面板
-        UIControl.OpenUI(new UIPanelType[] { UIPanelType.CardFlyIntoPanel });
+        UIControl.OpenUI(UIPanelType.CardFlyIntoPanel);
     }
 }

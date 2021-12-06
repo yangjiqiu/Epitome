@@ -69,6 +69,6 @@ public class CardSynthesisManage : MonoSingleton<CardSynthesisManage>
         }
 
         // 打开UI面板   使用了栈，先进后出
-        UIControl.OpenUI(new UIPanelType[] { UIPanelType.CardSynthesisPanel });
+        UIControl.OpenUI(UIPanelType.CardSynthesisPanel);
     }
 }

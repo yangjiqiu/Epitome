@@ -156,7 +156,7 @@ public class CardUnit : UIEventListener, ICardUnit
                     isMonitoringTime = false;
 
                     // 打开卡牌详情面板
-                    UIControl.OpenUI(new UIPanelType[] { UIPanelType.CardDetailsPanel });
+                    UIControl.OpenUI(UIPanelType.CardDetailsPanel);
                 }
             }
 

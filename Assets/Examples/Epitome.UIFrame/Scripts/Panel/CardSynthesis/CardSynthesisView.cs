@@ -136,7 +136,7 @@ public class CardSynthesisView : BaseView
         if (CardDataManage.Instance.synthesisCard.Count == 3)
         {
             // 打开新卡牌合成效果面板
-            UIControl.OpenUI(new UIPanelType[] { UIPanelType.CardShowPanel });
+            UIControl.OpenUI(UIPanelType.CardShowPanel);
 
             // 设置新卡牌S数据 普通S卡
             CardDataManage.Instance.newCardData = CardDataManage.Instance.OrdinaryCardData["S"][0];
