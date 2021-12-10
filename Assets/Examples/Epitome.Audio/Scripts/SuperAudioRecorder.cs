@@ -1,4 +1,4 @@
-﻿ /* $Header:   Assets/Epitome/Epitome.Audio/Demo/Audio/Scripts/SuperAudioRecorder.cs   1.0   2020/06/28 Sunday AM 10:11:35   Ji Qiu .Yang   2017.1.1f1  $ */
+ /* $Header:   Assets/Epitome/Epitome.Audio/Demo/Audio/Scripts/SuperAudioRecorder.cs   1.0   2020/06/28 Sunday AM 10:11:35   Ji Qiu .Yang   2017.1.1f1  $ */
 /***********************************************************************************************
  ***              C O N F I D E N T I A L  ---  E P I T O M E  S T U D I O S                 ***
  ***********************************************************************************************
@@ -20,7 +20,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Epitome.Audio;
+using Epitome.Utility.Audio;
 using Epitome.LogSystem;
 
 namespace Epitome.Demo

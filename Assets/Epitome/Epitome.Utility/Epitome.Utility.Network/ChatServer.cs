@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
  * 文件名：ChatServer
  * 文件功能描述：聊天服务器
 ----------------------------------------------------------------*/
@@ -6,13 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Epitome.Network
+namespace Epitome.Utility.Network
 {
-    //===============命名空间=========================
-    using Manager;
-    using Utility;
-    //===============命名空间=========================
-
     public class ChatServer
     {
         static ChatServer mInstance;

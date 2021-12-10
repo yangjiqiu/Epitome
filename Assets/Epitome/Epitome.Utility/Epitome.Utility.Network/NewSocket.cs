@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
  * 文件名：NewSocket
  * 文件功能描述：创建套接字
 ----------------------------------------------------------------*/
@@ -8,14 +8,10 @@ using UnityEngine;
 using System.Net;//网络协议
 using System.Net.Sockets;//Sockets网络应用程序
 using System.Threading;//多线程编程
+using Epitome.Manager;
 
-namespace Epitome.Network
+namespace Epitome.Utility.Network
 {
-    //===============命名空间=========================
-    using Manager;
-	using Utility;
-    //===============命名空间=========================
-
     public class NewSocket
 	{
         //++++++++++++++++++++     定义变量     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

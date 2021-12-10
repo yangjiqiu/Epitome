@@ -1,4 +1,4 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using UnityEngine;
 using NAudio.Mixer;
 using NAudio.Wave.SampleProviders;
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
     public static class AudioMixer
     {

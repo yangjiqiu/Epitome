@@ -1,17 +1,14 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
  * 文件名：NewHTTP
  * 文件功能描述：超文本传输协议
 ----------------------------------------------------------------*/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Epitome.Manager;
 
-namespace Epitome.Network
+namespace Epitome.Utility.Network
 {
-    //===============命名空间=========================
-    using Manager;
-    //===============命名空间=========================
-
     public class NewHTTP : MonoBehaviour
 	{
 		static NewHTTP mInstance;

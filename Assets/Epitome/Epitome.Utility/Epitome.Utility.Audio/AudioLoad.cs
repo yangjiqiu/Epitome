@@ -1,10 +1,10 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
     public delegate void AudioLoadFinish(AudioClip clip);
     public delegate void AudiosLoadFinish(List<AudioClip> clipa, List<string> audioPaths);

@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
  * 文件名：AudioRecord
  * 文件功能描述：录音
 ----------------------------------------------------------------*/
@@ -7,12 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using Epitome.Hardware;
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
-    using Epitome.Utility;
-    using Hardware;
-
     public static class AudioRecord
     {
 

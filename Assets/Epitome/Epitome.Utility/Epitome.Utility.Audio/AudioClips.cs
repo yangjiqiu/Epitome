@@ -1,11 +1,11 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
     public class AudioClips
     {

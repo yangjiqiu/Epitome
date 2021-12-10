@@ -1,4 +1,4 @@
-﻿using NAudio.Wave;
+using NAudio.Wave;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ using Epitome.Utility;
 using UnityEditor;
 #endif
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
     public static class AudioConverter
     {

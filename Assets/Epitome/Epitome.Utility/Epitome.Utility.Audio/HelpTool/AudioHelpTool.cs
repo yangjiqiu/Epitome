@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Epitome.Utility;
@@ -12,7 +12,7 @@ using OfficeOpenXml;
 using UnityEditor;
 #endif
 
-namespace Epitome.Audio
+namespace Epitome.Utility.Audio
 {
     public static class AudioHelpTool
     {
