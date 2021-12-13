@@ -184,6 +184,7 @@ namespace Epitome
 
         public AssetInfo GetAssetInfo(string path,Action<Object> loaded)
         {
+            AssetInfo assetInfo = null;
             if (string.IsNullOrEmpty(path))
             {
                 Debug.LogError("Error:null path name");
@@ -191,10 +192,10 @@ namespace Epitome
                 if (loaded !=null)
                 {
                     loaded(null);
+                    return assetInfo;
                 }
             }
 
-            AssetInfo assetInfo = null;
             if (!assetInfoDict.TryGetValue(path,out assetInfo))
             {
                 assetInfo = new AssetInfo();
